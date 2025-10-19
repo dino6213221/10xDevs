@@ -1,0 +1,33 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { EditFlashcardForm } from "../../../components/EditFlashcardForm";
+
+export async function getStaticPaths() {
+  // For now, return empty array since we're not using static generation
+  // In a real app, you might fetch all flashcard IDs here
+  return [];
+}
+
+const { id } = Astro.params;
+---
+
+<Layout title="Edit Flashcard">
+  <main class="min-h-screen bg-gray-50">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="mb-8">
+        <div class="flex items-center gap-4 mb-4">
+          <a href="/flashcards" class="text-blue-600 hover:text-blue-500 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Flashcards
+          </a>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900">Edit Flashcard</h1>
+        <p class="mt-2 text-gray-600">Update your flashcard content</p>
+      </div>
+
+      <EditFlashcardForm flashcardId={parseInt(id)} client:load />
+    </div>
+  </main>
+</Layout>
