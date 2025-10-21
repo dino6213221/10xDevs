@@ -73,6 +73,11 @@ Ensure you have the following installed:
 - **npm** (comes with Node.js)
 - **Git**
 
+### Testing
+- **Unit Tests** - Vitest, React Testing Library
+- **End-to-End Tests** - Playwright
+- **Test Coverage** - Codecov
+
 ### Installation
 
 1. **Clone the repository**

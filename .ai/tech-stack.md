@@ -22,3 +22,8 @@
 
 - GitHub Actions for creating CI/CD pipelines
 - DigitalOcean for hosting the application via a Docker image
+
+### Testing Tools
+
+- **Unit Testing:** React Testing Library and Vitest enable fast and effective testing of frontend components and business logic.
+- **E2E Testing:** Playwright is used to conduct full end-to-end tests, ensuring that the application's user interface and authentication processes work as expected.

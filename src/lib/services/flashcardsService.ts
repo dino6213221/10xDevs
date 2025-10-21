@@ -124,9 +124,6 @@ class FlashcardsServiceImpl implements FlashcardsService {
     const userId = await userService.getOrCreateUserId(supabase, authUserId);
 
     // Get single flashcard, ensuring it belongs to the user
-
-    console.log(userId, flashcardId);
-
     const { data: flashcard, error } = await supabase
       .from("flashcards")
       .select("id, front, source, back, created_at, updated_at, status")
