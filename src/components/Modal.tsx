@@ -199,28 +199,28 @@ export function ConfirmationModal({
   type = "info",
   isLoading = false,
 }: ConfirmationModalProps) {
-  const getConfirmButtonVariant = () => {
-    switch (type) {
-      case "danger":
-        return "destructive";
-      case "warning":
-        return "default";
-      case "info":
-      default:
-        return "default";
-    }
-  };
+const getConfirmButtonVariant = () => {
+  switch (type) {
+    case "danger":
+      return "destructive";
+    case "warning":
+      return "default";
+    case "info":
+    default:
+      return "default";
+  }
+};
 
-  const footer = (
-    <>
-      <Button variant="outline" onClick={onClose} disabled={isLoading}>
-        {cancelText}
-      </Button>
-      <Button variant={getConfirmButtonVariant()} onClick={onConfirm} disabled={isLoading}>
-        {isLoading ? "Processing..." : confirmText}
-      </Button>
-    </>
-  );
+const footer = (
+  <>
+    <Button variant="outline" onClick={onClose} disabled={isLoading} data-testid="confirmation-modal-cancel-button">
+      {cancelText}
+    </Button>
+    <Button variant={getConfirmButtonVariant()} onClick={onConfirm} disabled={isLoading} data-testid="confirmation-modal-confirm-button">
+      {isLoading ? "Processing..." : confirmText}
+    </Button>
+  </>
+);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} footer={footer}>

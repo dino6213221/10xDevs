@@ -65,7 +65,7 @@ export function AuthForm({ mode, onSubmit, isLoading, error, successMessage }: A
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate data-testid="auth-form">
       <div>
         <label htmlFor={emailId} className="block text-sm font-medium text-gray-700 mb-1">
           Email
@@ -75,6 +75,7 @@ export function AuthForm({ mode, onSubmit, isLoading, error, successMessage }: A
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          data-testid="auth-email-input"
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             validationErrors.email ? "border-red-500" : "border-gray-300"
           }`}
@@ -99,6 +100,7 @@ export function AuthForm({ mode, onSubmit, isLoading, error, successMessage }: A
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          data-testid="auth-password-input"
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             validationErrors.password ? "border-red-500" : "border-gray-300"
           }`}
@@ -152,7 +154,7 @@ export function AuthForm({ mode, onSubmit, isLoading, error, successMessage }: A
         </div>
       )}
 
-      <Button type="submit" disabled={isLoading} className="w-full">
+      <Button type="submit" disabled={isLoading} className="w-full" data-testid="auth-submit-button">
         {isLoading ? "Please wait..." : mode === "login" ? "Sign In" : "Sign Up"}
       </Button>
 

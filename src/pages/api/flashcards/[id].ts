@@ -11,6 +11,7 @@ export const prerender = false;
 const updateFlashcardSchema = z.object({
   front: z.string().min(1, "Front cannot be empty").max(1000, "Front is too long").optional(),
   back: z.string().min(1, "Back cannot be empty").max(1000, "Back is too long").optional(),
+  status: z.enum(["approved", "proposal"], { invalid_type_error: "Invalid status" }).optional(),
 });
 
 export const GET: APIRoute = async (context) => {
@@ -169,10 +170,10 @@ export const PUT: APIRoute = async (context) => {
     }
 
     // Ensure at least one field is provided for update
-    if (!bodyValidation.data.front && !bodyValidation.data.back) {
+    if (!bodyValidation.data.front && !bodyValidation.data.back && !bodyValidation.data.status) {
       return new Response(
         JSON.stringify({
-          error: "At least one field (front or back) must be provided for update",
+          error: "At least one field (front, back, or status) must be provided for update",
         }),
         {
           status: 400,

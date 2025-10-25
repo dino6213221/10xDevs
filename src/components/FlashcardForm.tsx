@@ -98,6 +98,7 @@ export function FlashcardForm({
           id={frontId}
           value={front}
           onChange={(e) => setFront(e.target.value)}
+          data-testid="flashcard-front-input"
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical min-h-[100px] ${
             validationErrors.front ? "border-red-500" : "border-gray-300"
           }`}
@@ -129,6 +130,7 @@ export function FlashcardForm({
           id={backId}
           value={back}
           onChange={(e) => setBack(e.target.value)}
+          data-testid="flashcard-back-input"
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical min-h-[120px] ${
             validationErrors.back ? "border-red-500" : "border-gray-300"
           }`}
@@ -192,10 +194,10 @@ export function FlashcardForm({
       )}
 
       <div className="flex gap-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading} className="flex-1">
+        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading} data-testid="flashcard-cancel-button" className="flex-1">
           Cancel
         </Button>
-        <Button type="submit" disabled={isLoading || Object.keys(validationErrors).length > 0} className="flex-1">
+        <Button type="submit" disabled={isLoading || Object.keys(validationErrors).length > 0} data-testid="flashcard-submit-button" className="flex-1">
           {isLoading ? "Saving..." : mode === "create" ? "Create Flashcard" : "Save Changes"}
         </Button>
       </div>

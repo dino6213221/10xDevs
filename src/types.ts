@@ -31,7 +31,7 @@ export interface GetFlashcardsQuery {
 }
 
 // 7. UpdateFlashcardCommand - From TablesUpdate, only editable fields
-export type UpdateFlashcardCommand = Pick<TablesUpdate<"flashcards">, "front" | "back">;
+export type UpdateFlashcardCommand = Pick<TablesUpdate<"flashcards">, "front" | "back" | "status">;
 
 // 8. DeleteFlashcardCommand - No payload
 export type DeleteFlashcardCommand = Record<string, never>;

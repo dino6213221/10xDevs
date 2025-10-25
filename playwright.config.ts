@@ -1,14 +1,18 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env.test') });
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
   projects: [
@@ -20,7 +24,7 @@ export default defineConfig({
   webServer: [
     {
       command: 'npm run build && npm run preview',
-      port: 4321,
+      port: 3000,
       reuseExistingServer: !process.env.CI,
     },
   ],

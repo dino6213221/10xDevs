@@ -92,7 +92,7 @@ export function CreateFlashcardForm() {
     <>
       <div className="bg-white shadow rounded-lg p-6">
         <div className="mb-6">
-          <Button onClick={handleUseAI} variant="outline" className="w-full" disabled={isLoading}>
+          <Button onClick={handleUseAI} variant="outline" className="w-full" disabled={isLoading} data-testid="use-ai-button">
             <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"

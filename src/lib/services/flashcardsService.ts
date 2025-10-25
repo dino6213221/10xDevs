@@ -1,6 +1,6 @@
 import { type SupabaseClient } from "@supabase/supabase-js";
 
-import type { Database } from "@/db/database.types.ts";
+import type { Database, TablesUpdate } from "@/db/database.types.ts";
 import type {
   GetFlashcardsQuery,
   FlashcardsResponseDTO,
@@ -199,13 +199,16 @@ class FlashcardsServiceImpl implements FlashcardsService {
     // Convert auth user ID to application user ID
     const userId = await userService.getOrCreateUserId(supabase, authUserId);
 
+    // Build update object with only provided fields
+    const updateData: Partial<TablesUpdate<"flashcards">> = {};
+    if (command.front !== undefined) updateData.front = command.front;
+    if (command.back !== undefined) updateData.back = command.back;
+    if (command.status !== undefined) updateData.status = command.status;
+
     // Update flashcard, ensuring it belongs to the user
     const { error } = await supabase
       .from("flashcards")
-      .update({
-        front: command.front,
-        back: command.back,
-      })
+      .update(updateData)
       .eq("id", flashcardId)
       .eq("user_id", userId);
 

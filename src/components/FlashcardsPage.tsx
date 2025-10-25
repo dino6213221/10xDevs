@@ -113,12 +113,12 @@ export function FlashcardsPage() {
   const handleApprove = useCallback(
     async (id: number) => {
       try {
-        const response = await fetch(`/api/flashcards?id=${id}`, {
+        const response = await fetch(`/api/flashcards/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ action: "approve" }),
+          body: JSON.stringify({ status: "approved" }),
         });
 
         if (!response.ok) {
