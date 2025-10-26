@@ -1,4 +1,4 @@
-name: Pull Request Checks
+name: Pull Request Check Test
 
 on:
   pull_request:
@@ -49,6 +49,7 @@ jobs:
   test-e2e:
     name: 'E2E Tests'
     runs-on: ubuntu-latest
+    environment: integration
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_TEST_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_TEST_KEY }}
