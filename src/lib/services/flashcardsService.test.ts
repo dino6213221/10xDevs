@@ -42,15 +42,15 @@ beforeAll(() => {
 
 describe("FlashcardsService.getUserFlashcards", () => {
   let mockSupabaseClient: SupabaseClient<Database> = createClient(
-    "https://test.supabase.co",
-    "test-anon-key"
+    import.meta.env.SUPABASE_URL,
+    import.meta.env.SUPABASE_KEY
   ) as SupabaseClient<Database>;
 
   const mockAuthUserId = "auth-user-123";
   const mockAppUserId = 42;
 
   // Initialize at describe level to satisfy TypeScript
-  mockSupabaseClient = createClient("https://test.supabase.co", "test-anon-key") as SupabaseClient<Database>;
+  mockSupabaseClient = createClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY) as SupabaseClient<Database>;
 
   beforeEach(() => {
     // Reset mock query builder for each test
