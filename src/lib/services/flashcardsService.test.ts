@@ -41,7 +41,7 @@ beforeAll(() => {
 });
 
 describe("FlashcardsService.getUserFlashcards", () => {
-  const mockSupabaseClient: SupabaseClient<Database> = createClient(
+  let mockSupabaseClient: SupabaseClient<Database> = createClient(
     "https://test.supabase.co",
     "test-anon-key"
   ) as SupabaseClient<Database>;
