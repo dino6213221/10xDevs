@@ -31,7 +31,7 @@ export function AuthWrapper({ mode }: AuthWrapperProps) {
         const errorData = await response.json();
         setError(errorData.error || "An error occurred during login");
       }
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
@@ -57,7 +57,7 @@ export function AuthWrapper({ mode }: AuthWrapperProps) {
         const errorData = await response.json();
         setError(errorData.error || "An error occurred during signup");
       }
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);
@@ -85,7 +85,7 @@ export function AuthWrapper({ mode }: AuthWrapperProps) {
         const errorData = await response.json();
         setError(errorData.error || "An error occurred while sending reset email");
       }
-    } catch (err) {
+    } catch {
       setError("Network error. Please try again.");
     } finally {
       setIsLoading(false);

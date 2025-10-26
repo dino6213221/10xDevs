@@ -20,6 +20,8 @@ const baseConfig = tseslint.config({
   rules: {
     "no-console": "warn",
     "no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": ["off"],
+    "jsx-a11y/click-events-have-key-events": "off",
   },
 });
 

@@ -33,7 +33,6 @@ class UserServiceImpl implements UserService {
       // If RLS prevents insert, try to assign a temporary ID based on auth user ID
       // This is a temporary hack for development
       const tempId = parseInt(authUserId.slice(-8), 16) || 1;
-      console.warn(`RLS insert failed for user ${authUserId}, using temporary ID: ${tempId}`);
       return tempId;
     }
 

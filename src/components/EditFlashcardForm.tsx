@@ -72,8 +72,6 @@ export function EditFlashcardForm({ flashcardId }: EditFlashcardFormProps) {
           throw new Error(errorData.error || "Failed to update flashcard");
         }
 
-        const result = await response.json();
-
         addNotification({
           type: "success",
           title: "Flashcard Updated!",

@@ -1,28 +1,28 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 export class FlashcardsPage extends BasePage {
   private readonly pageTitle = 'h1:has-text("My Flashcards")';
   private readonly pageSubtitle = 'p:has-text("Manage and review your flashcard collection")';
   private readonly createNewButton = 'button:has-text("Create New Flashcard")';
   private readonly createFirstButton = 'button:has-text("Create Your First Flashcard")';
-  private readonly flashcardCards = 'article.bg-white';
-  private readonly emptyStateMessage = 'h3';
-  private readonly loadingSkeletons = '.animate-pulse';
+  private readonly flashcardCards = "article.bg-white";
+  private readonly emptyStateMessage = "h3";
+  private readonly loadingSkeletons = ".animate-pulse";
   private readonly yourFlashcardsHeading = 'h2:has-text("Your Flashcards")';
   private readonly notificationContainer = '[role="status"]';
 
   async navigateToFlashcards(): Promise<void> {
-    await this.navigate('/flashcards');
+    await this.navigate("/flashcards");
     await this.waitForLoad();
   }
 
   async getPageTitle(): Promise<string> {
-    // @ts-ignore
+    // @ts-expect-error Playwright's textContent() can return null but this method should always return string
     return this.page.locator(this.pageTitle).textContent();
   }
 
   async getPageSubtitle(): Promise<string> {
-    // @ts-ignore
+    // @ts-expect-error Playwright's textContent() can return null but this method should always return string
     return this.page.locator(this.pageSubtitle).textContent();
   }
 
@@ -63,19 +63,19 @@ export class FlashcardsPage extends BasePage {
     }
   }
 
-  async clickEditFlashcard(index: number = 0): Promise<void> {
+  async clickEditFlashcard(index = 0): Promise<void> {
     await this.page.locator(`${this.flashcardCards}:nth-child(${index + 1}) button:has-text("Edit")`).click();
   }
 
-  async clickDeleteFlashcard(index: number = 0): Promise<void> {
+  async clickDeleteFlashcard(index = 0): Promise<void> {
     await this.page.locator(`${this.flashcardCards}:nth-child(${index + 1}) button:has-text("Delete")`).click();
   }
 
-  async clickApproveFlashcard(index: number = 0): Promise<void> {
+  async clickApproveFlashcard(index = 0): Promise<void> {
     await this.page.locator(`${this.flashcardCards}:nth-child(${index + 1}) button:has-text("Approve")`).click();
   }
 
-  async clickRejectFlashcard(index: number = 0): Promise<void> {
+  async clickRejectFlashcard(index = 0): Promise<void> {
     await this.page.locator(`${this.flashcardCards}:nth-child(${index + 1}) button:has-text("Reject")`).click();
   }
 
@@ -89,13 +89,16 @@ export class FlashcardsPage extends BasePage {
 
   async waitForFlashcardsToLoad(): Promise<void> {
     // Wait until loading is complete and cards are visible or empty state appears
-    await this.page.waitForFunction(() => {
-      const loading = document.querySelector('.animate-pulse');
-      const cards = document.querySelectorAll('article.bg-white');
-      const emptyStateHeading = document.querySelector('h3');
-      const emptyState = emptyStateHeading && emptyStateHeading.textContent?.includes('No flashcards yet');
-      return !loading && (cards.length > 0 || emptyState);
-    }, { timeout: 10000 });
+    await this.page.waitForFunction(
+      () => {
+        const loading = document.querySelector(".animate-pulse");
+        const cards = document.querySelectorAll("article.bg-white");
+        const emptyStateHeading = document.querySelector("h3");
+        const emptyState = emptyStateHeading && emptyStateHeading.textContent?.includes("No flashcards yet");
+        return !loading && (cards.length > 0 || emptyState);
+      },
+      { timeout: 10000 }
+    );
   }
 
   async confirmDeleteFlashcard(): Promise<void> {

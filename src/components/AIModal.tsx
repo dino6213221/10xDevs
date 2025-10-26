@@ -13,24 +13,14 @@ interface AIModalProps {
 
 const MAX_SOURCE_LENGTH = 10000;
 
-export function AIModal({ isOpen, onClose, onGenerate, isLoading }: AIModalProps) {
+export function AIModal({ isOpen, onClose, onGenerate }: AIModalProps) {
   const [validationError, setValidationError] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [sourceText, setSourceText] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
 
   const sourceId = useId();
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-    };
-  }, []);
 
   // Focus textarea when modal opens
   useEffect(() => {

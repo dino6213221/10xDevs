@@ -59,7 +59,7 @@ export function AuthForm({ mode, onSubmit, isLoading, error, successMessage }: A
       const data = mode === "signup" ? { email: email.trim(), password } : { email: email.trim(), password };
 
       await onSubmit(data);
-    } catch (err) {
+    } catch {
       // Error handling is done by parent component
     }
   };

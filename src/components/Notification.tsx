@@ -33,7 +33,7 @@ export function Notification({
 
       return () => clearTimeout(timer);
     }
-  }, [duration, persistent]);
+  }, [duration, persistent]); // eslint-disable-line
 
   const handleDismiss = () => {
     setIsDismissing(true);

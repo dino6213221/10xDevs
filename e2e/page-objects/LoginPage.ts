@@ -1,15 +1,15 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 export class LoginPage extends BasePage {
-  private readonly emailInput = this.getByTestId('auth-email-input');
-  private readonly passwordInput = this.getByTestId('auth-password-input');
-  private readonly submitButton = this.getByTestId('auth-submit-button');
-  private readonly errorMessage = '.bg-red-50';
+  private readonly emailInput = this.getByTestId("auth-email-input");
+  private readonly passwordInput = this.getByTestId("auth-password-input");
+  private readonly submitButton = this.getByTestId("auth-submit-button");
+  private readonly errorMessage = ".bg-red-50";
   private readonly signUpLink = 'a[href="/auth/register"]:has-text("create a new account")';
   private readonly forgotPasswordLink = 'a[href="/auth/reset-password"]';
 
   async navigateToLogin(): Promise<void> {
-    await this.navigate('/auth/login');
+    await this.navigate("/auth/login");
     await this.waitForLoad();
   }
 
@@ -48,14 +48,14 @@ export class LoginPage extends BasePage {
   }
 
   async isLoginFormVisible(): Promise<boolean> {
-    return this.page.locator('form').isVisible();
+    return this.page.locator("form").isVisible();
   }
 
   async waitForRedirect(): Promise<void> {
-    await this.page.waitForURL('**/flashcards');
+    await this.page.waitForURL("**/flashcards");
   }
 
   async waitForErrorMessage(): Promise<void> {
-    await this.page.locator(this.errorMessage).waitFor({ state: 'visible', timeout: 5000 });
+    await this.page.locator(this.errorMessage).waitFor({ state: "visible", timeout: 5000 });
   }
 }

@@ -37,7 +37,7 @@ export function PasswordRecoveryForm({ onSubmit, isLoading, error, successMessag
 
     try {
       await onSubmit({ email: email.trim() });
-    } catch (err) {
+    } catch {
       // Error handling is done by parent component
     }
   };

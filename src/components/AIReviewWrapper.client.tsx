@@ -8,85 +8,79 @@ export default function AIReviewWrapper() {
 
   useEffect(() => {
     // Load candidates from sessionStorage
-    const stored = sessionStorage.getItem('aiGeneratedCandidate');
+    const stored = sessionStorage.getItem("aiGeneratedCandidate");
     if (stored) {
       try {
         const candidate = JSON.parse(stored);
         setCandidates([candidate]);
         // Clear it so we don't show it again on refresh
-        sessionStorage.removeItem('aiGeneratedCandidate');
-      } catch (error) {
-        console.error('Failed to parse stored candidate:', error);
+        sessionStorage.removeItem("aiGeneratedCandidate");
+      } catch {
+        // Invalid JSON, ignore
       }
     }
   }, []);
 
   const handleAccept = async (id: string, data: AcceptCandidateCommand): Promise<void> => {
     try {
-      const response = await fetch('/api/flashcards', {
-        method: 'POST',
+      const response = await fetch("/api/flashcards", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           front: data.front,
           back: data.back,
-          source: 'AI Generated',
-          status: 'approved'
-        })
+          source: "AI Generated",
+          status: "approved",
+        }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to create flashcard');
+        throw new Error(error.error || "Failed to create flashcard");
       }
 
-      console.log("Flashcard created successfully");
-      alert('Flashcard created successfully!');
+      alert("Flashcard created successfully!");
       setCandidates([]); // Remove from review
     } catch (error) {
-      console.error('Error accepting flashcard:', error);
-      alert('Failed to create flashcard: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      alert("Failed to create flashcard: " + (error instanceof Error ? error.message : "Unknown error"));
     }
   };
 
   const handleEdit = async (id: string, data: EditCandidateCommand): Promise<void> => {
     try {
-      const response = await fetch('/api/flashcards', {
-        method: 'POST',
+      const response = await fetch("/api/flashcards", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           front: data.front,
           back: data.back,
-          source: 'AI Generated (Edited)',
-          status: 'approved'
-        })
+          source: "AI Generated (Edited)",
+          status: "approved",
+        }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || 'Failed to create flashcard');
+        throw new Error(error.error || "Failed to create flashcard");
       }
 
-      console.log("Flashcard created successfully after edit");
-      alert('Flashcard created successfully after editing!');
+      alert("Flashcard created successfully after editing!");
       setCandidates([]); // Remove from review
     } catch (error) {
-      console.error('Error accepting edited flashcard:', error);
-      alert('Failed to create flashcard: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      alert("Failed to create flashcard: " + (error instanceof Error ? error.message : "Unknown error"));
     }
   };
 
   const handleDiscard = async (id: string): Promise<void> => {
-    console.log("Discard candidate:", id);
-    setCandidates(candidates.filter(c => c.id !== id));
+    setCandidates(candidates.filter((c) => c.id !== id));
   };
 
   const handleRetry = async (): Promise<void> => {
-    console.log("Retry generation");
-    window.location.href = '/ai/generate';
+    window.location.href = "/ai/generate";
   };
 
   return (

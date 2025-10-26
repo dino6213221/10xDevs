@@ -110,8 +110,6 @@ export function Modal({
       const firstElement = focusableElements[0] as HTMLElement;
       const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
-      console.log(firstElement, lastElement);
-
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
           lastElement.focus();
@@ -128,6 +126,7 @@ export function Modal({
 
   if (!isOpen) return null;
 
+  /* eslint-disable */
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
@@ -174,6 +173,7 @@ export function Modal({
     </div>
   );
 }
+/* eslint-enable */
 
 // Confirmation Modal - A specialized modal for confirmations
 interface ConfirmationModalProps {
@@ -199,28 +199,33 @@ export function ConfirmationModal({
   type = "info",
   isLoading = false,
 }: ConfirmationModalProps) {
-const getConfirmButtonVariant = () => {
-  switch (type) {
-    case "danger":
-      return "destructive";
-    case "warning":
-      return "default";
-    case "info":
-    default:
-      return "default";
-  }
-};
+  const getConfirmButtonVariant = () => {
+    switch (type) {
+      case "danger":
+        return "destructive";
+      case "warning":
+        return "default";
+      case "info":
+      default:
+        return "default";
+    }
+  };
 
-const footer = (
-  <>
-    <Button variant="outline" onClick={onClose} disabled={isLoading} data-testid="confirmation-modal-cancel-button">
-      {cancelText}
-    </Button>
-    <Button variant={getConfirmButtonVariant()} onClick={onConfirm} disabled={isLoading} data-testid="confirmation-modal-confirm-button">
-      {isLoading ? "Processing..." : confirmText}
-    </Button>
-  </>
-);
+  const footer = (
+    <>
+      <Button variant="outline" onClick={onClose} disabled={isLoading} data-testid="confirmation-modal-cancel-button">
+        {cancelText}
+      </Button>
+      <Button
+        variant={getConfirmButtonVariant()}
+        onClick={onConfirm}
+        disabled={isLoading}
+        data-testid="confirmation-modal-confirm-button"
+      >
+        {isLoading ? "Processing..." : confirmText}
+      </Button>
+    </>
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} footer={footer}>

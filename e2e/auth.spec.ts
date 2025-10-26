@@ -1,17 +1,15 @@
-import { test, expect } from './test.setup';
-import { LoginPage } from './page-objects/LoginPage';
-import { FlashcardsPage } from './page-objects/FlashcardsPage';
+import { test, expect } from "./test.setup";
+import { LoginPage } from "./page-objects/LoginPage";
+import { FlashcardsPage } from "./page-objects/FlashcardsPage";
 
-test.describe('Authentication', () => {
+test.describe("Authentication", () => {
   let loginPage: LoginPage;
-  let flashcardsPage: FlashcardsPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
-    flashcardsPage = new FlashcardsPage(page);
   });
 
-  test('successful login redirects to flashcards page', async () => {
+  test("successful login redirects to flashcards page", async () => {
     // TODO: Implement with test user credentials
     // Example with environment variables:
     // const testUser = {
@@ -21,14 +19,14 @@ test.describe('Authentication', () => {
     // await loginPage.navigateToLogin();
     // await loginPage.submitLoginForm(testUser.email, testUser.password);
     // await expect(page).toHaveURL('/flashcards', { timeout: 10000 });
-    test.skip(true, 'Requires valid Supabase test user');
+    test.skip(true, "Requires valid Supabase test user");
   });
 
-  test('login with invalid credentials shows error message', async () => {
+  test("login with invalid credentials shows error message", async () => {
     // Arrange
     const invalidUser = {
-      email: 'invalid@example.com',
-      password: 'wrongpassword'
+      email: "invalid@example.com",
+      password: "wrongpassword",
     };
     await loginPage.navigateToLogin();
 
@@ -39,10 +37,10 @@ test.describe('Authentication', () => {
     await loginPage.waitForErrorMessage();
     expect(await loginPage.isErrorVisible()).toBeTruthy();
     const errorMessage = await loginPage.getErrorMessage();
-    expect(errorMessage).toContain('Invalid email or password. Please check your credentials and try again.');
+    expect(errorMessage).toContain("Invalid email or password. Please check your credentials and try again.");
   });
 
-  test('login form validation prevents submission with empty fields', async () => {
+  test("login form validation prevents submission with empty fields", async () => {
     // Arrange
     await loginPage.navigateToLogin();
 
@@ -50,11 +48,11 @@ test.describe('Authentication', () => {
     await loginPage.clickSignIn();
 
     // Assert
-    await expect(loginPage.page).toHaveURL('/auth/login');
+    await expect(loginPage.page).toHaveURL("/auth/login");
     expect(await loginPage.isLoginFormVisible()).toBeTruthy();
   });
 
-  test('navigation to signup page works', async () => {
+  test("navigation to signup page works", async () => {
     // Arrange
     await loginPage.navigateToLogin();
 
@@ -62,10 +60,10 @@ test.describe('Authentication', () => {
     await loginPage.clickSignUpLink();
 
     // Assert
-    await expect(loginPage.page).toHaveURL('/auth/register');
+    await expect(loginPage.page).toHaveURL("/auth/register");
   });
 
-  test('navigation to forgot password page works', async () => {
+  test("navigation to forgot password page works", async () => {
     // Arrange
     await loginPage.navigateToLogin();
 
@@ -73,21 +71,21 @@ test.describe('Authentication', () => {
     await loginPage.clickForgotPasswordLink();
 
     // Assert
-    await expect(loginPage.page).toHaveURL('/auth/reset-password');
+    await expect(loginPage.page).toHaveURL("/auth/reset-password");
   });
 });
 
-test.describe('Flashcards Page Access', () => {
+test.describe("Flashcards Page Access", () => {
   let flashcardsPage: FlashcardsPage;
 
   test.beforeEach(async ({ page }) => {
     flashcardsPage = new FlashcardsPage(page);
   });
 
-  test('flashcards page loads correctly for authenticated users', async ({ page }) => {
+  test("flashcards page loads correctly for authenticated users", async () => {
     // This test would need authentication setup
     // For now, just test the structure
-    await flashcardsPage.navigate('/flashcards');
+    await flashcardsPage.navigate("/flashcards");
 
     // Assert page elements are present (may redirect to login)
     await flashcardsPage.waitForLoad();

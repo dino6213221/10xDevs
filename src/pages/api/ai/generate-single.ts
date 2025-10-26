@@ -40,9 +40,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Get OpenRouter API key from environment
     const openRouterApiKey = import.meta.env.OPENROUTER_API_KEY;
-
     if (!openRouterApiKey) {
-      console.error("OPENROUTER_API_KEY not found in environment variables");
       return new Response(JSON.stringify({ error: "AI service is not configured" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -88,8 +86,7 @@ Return format:
     let openRouterResponse;
     try {
       openRouterResponse = await openRouterService.sendChatMessage(prompt);
-    } catch (error) {
-      console.error("OpenRouter service error:", error);
+    } catch {
       return new Response(JSON.stringify({ error: "Failed to generate flashcard with AI" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -97,7 +94,6 @@ Return format:
     }
 
     if (!openRouterResponse.choices || !openRouterResponse.choices[0] || !openRouterResponse.choices[0].message) {
-      console.error("Unexpected OpenRouter response format:", openRouterResponse);
       return new Response(JSON.stringify({ error: "Invalid response from AI service" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -113,8 +109,7 @@ Return format:
       // Clean the response - remove markdown code blocks if present
       const cleanedResponse = aiResponse.replace(/```json\s*|\s*```/g, "").trim();
       flashcardData = JSON.parse(cleanedResponse);
-    } catch (parseError) {
-      console.error("Failed to parse AI response as JSON:", aiResponse, parseError);
+    } catch {
       return new Response(JSON.stringify({ error: "AI generated invalid response format" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
@@ -147,8 +142,7 @@ Return format:
       }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
-  } catch (error) {
-    console.error("Error in generate-single API:", error);
+  } catch {
     return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
