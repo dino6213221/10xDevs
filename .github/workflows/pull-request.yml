@@ -1,4 +1,4 @@
-name: Pull Request Checkss
+name: Pull Request CheckStatus
 
 on:
   pull_request:
