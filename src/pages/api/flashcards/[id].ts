@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { APIRoute } from "astro";
-import type { UpdateFlashcardCommand, FlashcardDTO } from "@/types.ts";
+import type { UpdateFlashcardCommand } from "@/types.ts";
 import { flashcardsService } from "@/lib/services/flashcardsService.ts";
 import { createSupabaseServerInstance } from "@/db/supabase.client.ts";
 
@@ -85,9 +85,7 @@ export const GET: APIRoute = async (context) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error retrieving flashcard:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Internal server error",
@@ -185,20 +183,13 @@ export const PUT: APIRoute = async (context) => {
     const validatedCommand: UpdateFlashcardCommand = bodyValidation.data;
 
     // Update flashcard using the service
-    const response = await flashcardsService.updateFlashcard(
-      supabase,
-      userId,
-      idValidation.data,
-      validatedCommand
-    );
+    const response = await flashcardsService.updateFlashcard(supabase, userId, idValidation.data, validatedCommand);
 
     return new Response(JSON.stringify(response), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error updating flashcard:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Internal server error",
@@ -270,9 +261,7 @@ export const DELETE: APIRoute = async (context) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error deleting flashcard:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Internal server error",

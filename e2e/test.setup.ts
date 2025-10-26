@@ -1,4 +1,5 @@
-import { test as base } from '@playwright/test';
+/* eslint-disable react-hooks/rules-of-hooks */
+import { test as base } from "@playwright/test";
 
 // Extend the base test with custom setup
 export const test = base.extend({
@@ -17,5 +18,6 @@ export const test = base.extend({
     await use(page);
   },
 });
+/* eslint-enable react-hooks/rules-of-hooks */
 
-export { expect } from '@playwright/test';
+export { expect } from "@playwright/test";

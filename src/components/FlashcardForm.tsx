@@ -77,7 +77,7 @@ export function FlashcardForm({
           : { front: front.trim(), back: back.trim() };
 
       await onSubmit(data);
-    } catch (err) {
+    } catch {
       // Error handling is done by parent component
     }
   };
@@ -194,10 +194,22 @@ export function FlashcardForm({
       )}
 
       <div className="flex gap-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading} data-testid="flashcard-cancel-button" className="flex-1">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          disabled={isLoading}
+          data-testid="flashcard-cancel-button"
+          className="flex-1"
+        >
           Cancel
         </Button>
-        <Button type="submit" disabled={isLoading || Object.keys(validationErrors).length > 0} data-testid="flashcard-submit-button" className="flex-1">
+        <Button
+          type="submit"
+          disabled={isLoading || Object.keys(validationErrors).length > 0}
+          data-testid="flashcard-submit-button"
+          className="flex-1"
+        >
           {isLoading ? "Saving..." : mode === "create" ? "Create Flashcard" : "Save Changes"}
         </Button>
       </div>

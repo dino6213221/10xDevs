@@ -14,7 +14,6 @@ interface NotificationItem {
 export function FlashcardsPage() {
   const [flashcards, setFlashcards] = useState<FlashcardListDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     flashcardId: number | null;
@@ -38,7 +37,6 @@ export function FlashcardsPage() {
   const fetchFlashcards = useCallback(async () => {
     try {
       setIsLoading(true);
-      setError(null);
 
       const response = await fetch("/api/flashcards");
       if (!response.ok) {
@@ -49,7 +47,6 @@ export function FlashcardsPage() {
       setFlashcards(data.flashcards || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "An error occurred";
-      setError(errorMessage);
       addNotification({
         type: "error",
         title: "Failed to load flashcards",
@@ -58,7 +55,7 @@ export function FlashcardsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [addNotification]);
+  }, [addNotification]);  // eslint-disable-line
 
   const handleDelete = useCallback(
     async (id: number) => {

@@ -1,13 +1,13 @@
-import { BasePage } from './BasePage';
+import { BasePage } from "./BasePage";
 
 export class EditFlashcardPage extends BasePage {
   private readonly pageTitle = 'h1:has-text("Edit Flashcard")';
   private readonly backToFlashcardsLink = 'a[href="/flashcards"]';
-  readonly frontInput = this.getByTestId('flashcard-front-input');
-  readonly backInput = this.getByTestId('flashcard-back-input');
-  readonly submitButton = this.getByTestId('flashcard-submit-button');
-  private readonly cancelButton = this.getByTestId('flashcard-cancel-button');
-  private readonly loadingState = '.animate-pulse';
+  readonly frontInput = this.getByTestId("flashcard-front-input");
+  readonly backInput = this.getByTestId("flashcard-back-input");
+  readonly submitButton = this.getByTestId("flashcard-submit-button");
+  private readonly cancelButton = this.getByTestId("flashcard-cancel-button");
+  private readonly loadingState = ".animate-pulse";
   private readonly errorMessage = 'div.bg-red-50[role="alert"]';
 
   async navigateToEditFlashcard(flashcardId: number): Promise<void> {
@@ -16,7 +16,7 @@ export class EditFlashcardPage extends BasePage {
   }
 
   async getPageTitle(): Promise<string> {
-    // @ts-ignore
+    // @ts-expect-error Playwright's textContent() can return null but this method should always return string
     return this.page.locator(this.pageTitle).textContent();
   }
 
@@ -29,8 +29,8 @@ export class EditFlashcardPage extends BasePage {
   }
 
   async waitForFormToLoad(): Promise<void> {
-    await this.page.locator(this.frontInput).waitFor({ state: 'visible', timeout: 10000 });
-    await this.page.locator(this.backInput).waitFor({ state: 'visible', timeout: 10000 });
+    await this.page.locator(this.frontInput).waitFor({ state: "visible", timeout: 10000 });
+    await this.page.locator(this.backInput).waitFor({ state: "visible", timeout: 10000 });
   }
 
   async getFrontText(): Promise<string> {
@@ -74,6 +74,6 @@ export class EditFlashcardPage extends BasePage {
   }
 
   async waitForNavigation(): Promise<void> {
-    await this.page.waitForURL('**/flashcards');
+    await this.page.waitForURL("**/flashcards");
   }
 }

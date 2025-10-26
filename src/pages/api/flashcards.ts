@@ -1,13 +1,7 @@
 import { z } from "zod";
 
 import type { APIRoute } from "astro";
-import type {
-  GetFlashcardsQuery,
-  FlashcardsResponseDTO,
-  CreateFlashcardCommand,
-  CreateFlashcardResponseDTO,
-  UpdateFlashcardCommand,
-} from "@/types.ts";
+import type { GetFlashcardsQuery, CreateFlashcardCommand } from "@/types.ts";
 import { flashcardsService } from "@/lib/services/flashcardsService.ts";
 import { createSupabaseServerInstance } from "@/db/supabase.client.ts";
 
@@ -90,9 +84,7 @@ export const GET: APIRoute = async (context) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error retrieving flashcards:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Internal server error",
@@ -169,9 +161,7 @@ export const PUT: APIRoute = async (context) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error updating flashcard status:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Internal server error",
@@ -233,9 +223,7 @@ export const POST: APIRoute = async (context) => {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error creating flashcard:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "Internal server error",

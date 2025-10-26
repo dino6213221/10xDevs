@@ -17,9 +17,7 @@ export function CreateFlashcardForm() {
   const [error, setError] = useState<string | undefined>();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
-  const [initialValues, setInitialValues] = useState<
-    Partial<Pick<CreateFlashcardCommand, "front" | "back" | "source">>
-  >({});
+  const [initialValues] = useState<Partial<Pick<CreateFlashcardCommand, "front" | "back" | "source">>>({});
 
   const addNotification = useCallback((notification: Omit<NotificationItem, "id">) => {
     const id = Date.now().toString();
@@ -48,8 +46,6 @@ export function CreateFlashcardForm() {
           const errorData = await response.json();
           throw new Error(errorData.error || "Failed to create flashcard");
         }
-
-        const result = await response.json();
 
         addNotification({
           type: "success",
@@ -92,7 +88,13 @@ export function CreateFlashcardForm() {
     <>
       <div className="bg-white shadow rounded-lg p-6">
         <div className="mb-6">
-          <Button onClick={handleUseAI} variant="outline" className="w-full" disabled={isLoading} data-testid="use-ai-button">
+          <Button
+            onClick={handleUseAI}
+            variant="outline"
+            className="w-full"
+            disabled={isLoading}
+            data-testid="use-ai-button"
+          >
             <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
                 strokeLinecap="round"

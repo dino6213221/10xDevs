@@ -47,7 +47,7 @@ export function AIGenerator({ onGenerate, isLoading, error }: AIGeneratorProps) 
 
     try {
       await onGenerate({ sourceText: sourceText.trim(), options: {} });
-    } catch (err) {
+    } catch {
       // Error handling is done by parent component
     }
   };

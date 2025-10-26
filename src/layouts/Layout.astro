@@ -24,11 +24,7 @@ const userEmail = Astro.locals.user?.email;
     <title>{title}</title>
   </head>
   <body>
-    {
-      showNavigation && (
-        <Navigation isAuthenticated={isAuthenticated} userEmail={userEmail} client:load />
-      )
-    }
+    {showNavigation && <Navigation isAuthenticated={isAuthenticated} userEmail={userEmail} client:load />}
     <slot />
   </body>
 </html>

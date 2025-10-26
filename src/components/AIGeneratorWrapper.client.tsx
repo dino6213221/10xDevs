@@ -11,47 +11,41 @@ export default function AIGeneratorWrapper() {
     setError(undefined);
 
     try {
-      const response = await fetch('/api/ai/generate-single', {
-        method: 'POST',
+      const response = await fetch("/api/ai/generate-single", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sourceText: data.sourceText
-        })
+          sourceText: data.sourceText,
+        }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to generate flashcard');
+        throw new Error(errorData.error || "Failed to generate flashcard");
       }
 
       const result = await response.json();
-      console.log('Generated flashcard:', result);
 
       // Store the result temporarily for the review page
-      sessionStorage.setItem('aiGeneratedCandidate', JSON.stringify({
-        id: 'temp-' + Date.now(), // Generate temp ID
-        front: result.front,
-        back: result.back
-      }));
+      sessionStorage.setItem(
+        "aiGeneratedCandidate",
+        JSON.stringify({
+          id: "temp-" + Date.now(), // Generate temp ID
+          front: result.front,
+          back: result.back,
+        })
+      );
 
       // Redirect to review page
-      window.location.href = '/ai/review';
-
+      window.location.href = "/ai/review";
     } catch (err) {
-      console.error('Error generating flashcard:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <AIGenerator
-      onGenerate={handleGenerate}
-      isLoading={isLoading}
-      error={error}
-    />
-  );
+  return <AIGenerator onGenerate={handleGenerate} isLoading={isLoading} error={error} />;
 }

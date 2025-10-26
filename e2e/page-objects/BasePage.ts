@@ -7,12 +7,12 @@ export abstract class BasePage {
     this.page = page;
   }
 
-  async navigate(url: string = ''): Promise<void> {
+  async navigate(url = ""): Promise<void> {
     await this.page.goto(url);
   }
 
   async waitForLoad(): Promise<void> {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   async getTitle(): Promise<string> {
@@ -32,7 +32,7 @@ export abstract class BasePage {
   }
 
   async getText(selector: string): Promise<string> {
-    // @ts-ignore
+    // @ts-expect-error Playwright's textContent() can return null but this method should always return string
     return this.page.locator(selector).textContent();
   }
 

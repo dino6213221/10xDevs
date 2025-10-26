@@ -206,11 +206,7 @@ class FlashcardsServiceImpl implements FlashcardsService {
     if (command.status !== undefined) updateData.status = command.status;
 
     // Update flashcard, ensuring it belongs to the user
-    const { error } = await supabase
-      .from("flashcards")
-      .update(updateData)
-      .eq("id", flashcardId)
-      .eq("user_id", userId);
+    const { error } = await supabase.from("flashcards").update(updateData).eq("id", flashcardId).eq("user_id", userId);
 
     if (error) {
       throw new Error(`Failed to update flashcard: ${error.message}`);

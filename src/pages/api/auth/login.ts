@@ -61,9 +61,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error during login:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "An unexpected error occurred. Please try again later.",

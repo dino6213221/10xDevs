@@ -1,105 +1,105 @@
-name: Pull Request Checkss
+name: Pull Request Checks
 
 on:
   pull_request:
     branches: [ master ]
 
 env:
-  NODE_VERSION: "22.14.0"
+  NODE_VERSION: '22.14.0'
 
 jobs:
   lint:
+    name: 'Lint Code'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ".nvmrc"
+
+      - name: Run linting
+        run: npm run lint:check
+
+  test-unit:
+    name: 'Unit Tests'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-      
+
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Run unit tests
+        run: npm run test:unit
 
-      - name: Run linter
-        run: npm run lint
-
-  unit-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Upload unit test coverage to Codecov
+        if: success()
+        uses: codecov/codecov-action@v5
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          file: ./coverage/coverage-final.json
+          flags: unit
+          name: unit-coverage
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run unit tests with coverage
-        run: npm run test:unit -- --coverage
-
-      - name: Upload unit test coverage
-        uses: actions/upload-artifact@v5
-        with:
-          name: unit-test-coverage
-          path: coverage/
-          retention-days: 30
-
-  e2e-test:
+  test-e2e:
+    name: 'E2E Tests'
     runs-on: ubuntu-latest
-    environment: integration
     env:
-      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_TEST_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_TEST_KEY }}
+      SUPABASE_PUBLIC_KEY: ${{ secrets.SUPABASE_TEST_PUBLIC_KEY }}
+      E2E_USERNAME_ID: ${{ secrets.E2E_USERNAME_ID }}
+      E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: ./.github/actions/setup-node
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npm run e2e:install
 
-      - name: Run e2e tests
+      - name: Run E2E tests
         run: npm run test:e2e
 
-      - name: Upload Playwright report
+      - name: Upload test results
         uses: actions/upload-artifact@v5
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: e2e-test-results
+          path: test-results/
           retention-days: 30
 
-  status-comment:
+  pr-comment:
+    name: 'PR Status Comment'
     runs-on: ubuntu-latest
-    needs: [lint, unit-test, e2e-test]
-    if: always()
+    needs: [lint, test-unit, test-e2e]
+    if: always() && github.event_name == 'pull_request'
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      - name: Post status comment
+      - name: Create or update PR comment
         uses: peter-evans/create-or-update-comment@v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## Pull Request Status
-            
-            - **Lint**: ${{ needs.lint.result == 'success' && '✅ Passed' || '❌ Failed' }}
-            - **Unit Tests**: ${{ needs.unit-test.result == 'success' && '✅ Passed' || '❌ Failed' }}
-            - **E2E Tests**: ${{ needs.e2e-test.result == 'success' && '✅ Passed' || '❌ Failed' }}
-            
-            ${{ (needs.lint.result == 'success' && needs.unit-test.result == 'success' && needs.e2e-test.result == 'success') && '🎉 All checks passed!' || '⚠️ Some checks failed. Please review the details above.' }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+            ## Pull Request Checks Status
+
+            | Check | Status |
+            |-------|--------|
+            | 🔍 **Linting** | ${{ needs.lint.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+            | 🧪 **Unit Tests** | ${{ needs.test-unit.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+            | 🌐 **E2E Tests** | ${{ needs.test-e2e.result == 'success' && '✅ Passed' || '❌ Failed' }} |
+
+            ${{ needs.lint.result == 'success' && needs.test-unit.result == 'success' && needs.test-e2e.result == 'success' && '**🎉 All checks passed! Your PR is ready for review.**' || '**⚠️ Some checks failed. Please review the details above and fix any issues.**' }}
+          edit-mode: replace

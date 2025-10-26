@@ -12,21 +12,19 @@ export function Navigation({ isAuthenticated = false, userEmail }: NavigationPro
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
         // Redirect to login page after successful logout
-        window.location.href = '/auth/login';
-      } else {
-        console.error('Logout failed');
+        window.location.href = "/auth/login";
       }
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch {
+      // Logout may fail, but continue
     }
   };
 
@@ -74,7 +72,10 @@ export function Navigation({ isAuthenticated = false, userEmail }: NavigationPro
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <a href="/auth/login" className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium">
+                <a
+                  href="/auth/login"
+                  className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
+                >
                   Sign In
                 </a>
                 <Button asChild size="sm">

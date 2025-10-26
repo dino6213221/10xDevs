@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       headers: request.headers,
     });
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: validatedCommand.email,
       password: validatedCommand.password,
     });
@@ -78,9 +78,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
-    console.error("Error during signup:", error);
-
+  } catch {
     return new Response(
       JSON.stringify({
         error: "An unexpected error occurred. Please try again later.",

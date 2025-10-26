@@ -41,16 +41,16 @@ beforeAll(() => {
 });
 
 describe("FlashcardsService.getUserFlashcards", () => {
-  let mockSupabaseClient: SupabaseClient<Database>;
+  const mockSupabaseClient: SupabaseClient<Database> = createClient(
+    "https://test.supabase.co",
+    "test-anon-key"
+  ) as SupabaseClient<Database>;
 
   const mockAuthUserId = "auth-user-123";
   const mockAppUserId = 42;
 
   // Initialize at describe level to satisfy TypeScript
-  mockSupabaseClient = createClient(
-    "https://test.supabase.co",
-    "test-anon-key"
-  ) as SupabaseClient<Database>;
+  mockSupabaseClient = createClient("https://test.supabase.co", "test-anon-key") as SupabaseClient<Database>;
 
   beforeEach(() => {
     // Reset mock query builder for each test
@@ -85,7 +85,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
   ];
 
   const mockSupabaseResponse = {
-    data: mockFlashcards.map(card => ({
+    data: mockFlashcards.map((card) => ({
       ...card,
       source: "test-source", // Full row includes source and updated_at
       updated_at: card.created_at,
@@ -102,24 +102,14 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should use defaults when no parameters provided", async () => {
       const params: GetFlashcardsQuery = {};
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       // Verify userService was called to convert auth user ID
-      expect(userService.getOrCreateUserId).toHaveBeenCalledWith(
-        mockSupabaseClient,
-        mockAuthUserId
-      );
+      expect(userService.getOrCreateUserId).toHaveBeenCalledWith(mockSupabaseClient, mockAuthUserId);
 
       // Verify query building
       expect(mockSupabaseClient.from).toHaveBeenCalledWith("flashcards");
-      expect(mockQueryBuilder.select).toHaveBeenCalledWith(
-        "id, front, back, created_at, status",
-        { count: "exact" }
-      );
+      expect(mockQueryBuilder.select).toHaveBeenCalledWith("id, front, back, created_at, status", { count: "exact" });
       expect(mockQueryBuilder.eq).toHaveBeenCalledWith("user_id", mockAppUserId);
 
       // Verify default sorting (created_at desc)
@@ -155,11 +145,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: 15, // More items for pagination
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.order).toHaveBeenCalledWith("front", {
         ascending: true,
@@ -178,16 +164,9 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should convert auth user ID to app user ID via userService", async () => {
       const params: GetFlashcardsQuery = {};
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
-      expect(userService.getOrCreateUserId).toHaveBeenCalledWith(
-        mockSupabaseClient,
-        mockAuthUserId
-      );
+      expect(userService.getOrCreateUserId).toHaveBeenCalledWith(mockSupabaseClient, mockAuthUserId);
       expect(mockQueryBuilder.eq).toHaveBeenCalledWith("user_id", mockAppUserId);
     });
 
@@ -195,30 +174,19 @@ describe("FlashcardsService.getUserFlashcards", () => {
       const params: GetFlashcardsQuery = {};
       const userServiceError = new Error("User not found");
 
-      vi.mocked(userService.getOrCreateUserId).mockRejectedValue(
-        userServiceError
-      );
+      vi.mocked(userService.getOrCreateUserId).mockRejectedValue(userServiceError);
 
-      await expect(
-        flashcardsService.getUserFlashcards(
-          mockSupabaseClient,
-          mockAuthUserId,
-          params
-        )
-      ).rejects.toThrow("User not found");
+      await expect(flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params)).rejects.toThrow(
+        "User not found"
+      );
     });
   });
 
   describe("Pagination logic", () => {
-
     it("should calculate correct offset for page 1", async () => {
       const params: GetFlashcardsQuery = { page: 1, limit: 10 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(0, 9);
     });
@@ -226,11 +194,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should calculate correct offset for page 2", async () => {
       const params: GetFlashcardsQuery = { page: 2, limit: 5 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(5, 9);
     });
@@ -238,11 +202,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should handle negative page values gracefully", async () => {
       const params: GetFlashcardsQuery = { page: -1, limit: 10 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(-20, -11); // (page-1)*limit = (-1-1)*10 = -20, + limit - 1 = -11
     });
@@ -250,11 +210,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should handle zero page value", async () => {
       const params: GetFlashcardsQuery = { page: 0, limit: 10 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(-10, -1); // Invalid range
     });
@@ -262,11 +218,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should handle large page numbers", async () => {
       const params: GetFlashcardsQuery = { page: 1000, limit: 10 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(9990, 9999);
     });
@@ -276,11 +228,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should sort by created_at descending by default", async () => {
       const params: GetFlashcardsQuery = {};
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.order).toHaveBeenCalledWith("created_at", {
         ascending: false,
@@ -290,11 +238,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should sort by front in ascending order", async () => {
       const params: GetFlashcardsQuery = { sort: "front", order: "asc" };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.order).toHaveBeenCalledWith("front", {
         ascending: true,
@@ -307,11 +251,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         order: "desc",
       };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.order).toHaveBeenCalledWith("status", {
         ascending: false,
@@ -324,11 +264,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         order: "asc",
       };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       // Should still try to sort by the invalid field (Supabase will handle validation)
       expect(mockQueryBuilder.order).toHaveBeenCalledWith("invalid_field", {
@@ -367,11 +303,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: 1,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        {}
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {});
 
       expect(result.flashcards).toEqual(expectedTransformed);
     });
@@ -383,11 +315,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: null,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        {}
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {});
 
       expect(result.flashcards).toEqual([]);
       expect(result.pagination.total).toBe(0);
@@ -400,11 +328,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: null,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        {}
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {});
 
       expect(result.flashcards).toEqual([]);
       expect(result.pagination.total).toBe(0);
@@ -417,11 +341,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: 0,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        {}
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {});
 
       expect(result.flashcards).toEqual([]);
       expect(result.pagination.total).toBe(0);
@@ -434,11 +354,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: null,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        {}
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {});
 
       expect(result.pagination.total).toBe(0);
     });
@@ -450,11 +366,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: undefined,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        {}
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {});
 
       expect(result.pagination.total).toBe(0);
     });
@@ -469,13 +381,9 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: null,
       });
 
-      await expect(
-        flashcardsService.getUserFlashcards(
-          mockSupabaseClient,
-          mockAuthUserId,
-          {}
-        )
-      ).rejects.toThrow("Database query failed: Database connection failed");
+      await expect(flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {})).rejects.toThrow(
+        "Database query failed: Database connection failed"
+      );
     });
 
     it("should propagate Supabase error details", async () => {
@@ -486,27 +394,17 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: null,
       });
 
-      await expect(
-        flashcardsService.getUserFlashcards(
-          mockSupabaseClient,
-          mockAuthUserId,
-          {}
-        )
-      ).rejects.toThrow("Database query failed: Table does not exist");
+      await expect(flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {})).rejects.toThrow(
+        "Database query failed: Table does not exist"
+      );
     });
 
     it("should handle network errors", async () => {
-      mockQueryBuilder.range.mockRejectedValueOnce(
-        new Error("Network timeout")
-      );
+      mockQueryBuilder.range.mockRejectedValueOnce(new Error("Network timeout"));
 
-      await expect(
-        flashcardsService.getUserFlashcards(
-          mockSupabaseClient,
-          mockAuthUserId,
-          {}
-        )
-      ).rejects.toThrow("Network timeout");
+      await expect(flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, {})).rejects.toThrow(
+        "Network timeout"
+      );
     });
   });
 
@@ -519,11 +417,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         order: "desc",
       };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       // Should still work despite invalid parameters
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(NaN, NaN);
@@ -535,11 +429,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should handle extreme limit values", async () => {
       const params: GetFlashcardsQuery = { page: 1, limit: 10000 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(0, 9999);
     });
@@ -547,11 +437,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should handle zero limit", async () => {
       const params: GetFlashcardsQuery = { page: 1, limit: 0 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(0, -1);
     });
@@ -559,11 +445,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
     it("should handle negative limit", async () => {
       const params: GetFlashcardsQuery = { page: 1, limit: -5 };
 
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(mockQueryBuilder.range).toHaveBeenCalledWith(-0, -6); // -0 is same as 0
     });
@@ -572,16 +454,9 @@ describe("FlashcardsService.getUserFlashcards", () => {
       const emptyAuthUserId = "";
 
       // This might work or fail depending on userService implementation
-      await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        emptyAuthUserId,
-        {}
-      );
+      await flashcardsService.getUserFlashcards(mockSupabaseClient, emptyAuthUserId, {});
 
-      expect(userService.getOrCreateUserId).toHaveBeenCalledWith(
-        mockSupabaseClient,
-        ""
-      );
+      expect(userService.getOrCreateUserId).toHaveBeenCalledWith(mockSupabaseClient, "");
     });
   });
 
@@ -620,11 +495,7 @@ describe("FlashcardsService.getUserFlashcards", () => {
         count: 100,
       });
 
-      const result = await flashcardsService.getUserFlashcards(
-        mockSupabaseClient,
-        mockAuthUserId,
-        params
-      );
+      const result = await flashcardsService.getUserFlashcards(mockSupabaseClient, mockAuthUserId, params);
 
       expect(result.pagination).toEqual({
         page: 1,
