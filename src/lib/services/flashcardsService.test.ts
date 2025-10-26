@@ -50,7 +50,10 @@ describe("FlashcardsService.getUserFlashcards", () => {
   const mockAppUserId = 42;
 
   // Initialize at describe level to satisfy TypeScript
-  mockSupabaseClient = createClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_KEY) as SupabaseClient<Database>;
+  mockSupabaseClient = createClient(
+    import.meta.env.SUPABASE_URL,
+    import.meta.env.SUPABASE_KEY
+  ) as SupabaseClient<Database>;
 
   beforeEach(() => {
     // Reset mock query builder for each test
