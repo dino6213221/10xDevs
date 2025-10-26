@@ -21,7 +21,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Run linting
-        run: npm run lint:check
+        run: npm run lint
 
   test-unit:
     name: 'Unit Tests'
