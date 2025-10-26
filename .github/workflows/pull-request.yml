@@ -18,7 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: ./.github/actions/setup-node
         with:
-          node-version: ".nvmrc"
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Run linting
         run: npm run lint:check
