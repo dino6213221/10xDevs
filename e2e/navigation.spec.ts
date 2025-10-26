@@ -1,4 +1,4 @@
-import { test, expect } from "./test.setup";
+import { test, expect } from "@playwright/test";
 
 test.describe("Navigation", () => {
   test("homepage redirects to login for unauthenticated users", async ({ page }) => {
