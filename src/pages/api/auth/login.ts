@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { APIRoute } from "astro";
 import type { LoginCommand } from "@/types.ts";
-import { createSupabaseServerInstance } from "../../../db/supabase.client.ts";
+import { createSupabaseServerInstance } from "@/db/supabase.client.ts";
 
 export const prerender = false;
 

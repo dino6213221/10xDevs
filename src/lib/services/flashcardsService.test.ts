@@ -8,7 +8,7 @@ import type { GetFlashcardsQuery, FlashcardsResponseDTO, FlashcardListDTO } from
 import { flashcardsService } from "./flashcardsService";
 import { userService } from "./userService";
 
-// Mock userService
+// Mock userServices
 vi.mock("./userService", () => ({
   userService: {
     getOrCreateUserId: vi.fn(),
