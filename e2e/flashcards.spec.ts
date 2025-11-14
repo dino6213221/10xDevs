@@ -1,7 +1,7 @@
-import { test, expect } from "./test.setup";
 import { FlashcardsPage } from "./page-objects/FlashcardsPage";
 import { EditFlashcardPage } from "./page-objects/EditFlashcardPage";
 import { LoginPage } from "./page-objects/LoginPage";
+import { test, expect } from "@playwright/test";
 
 test.describe("Flashcards Page", () => {
   let flashcardsPage: FlashcardsPage;
